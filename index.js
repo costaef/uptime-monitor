@@ -1,5 +1,6 @@
 import http from 'http'
 import url from 'url'
+import { StringDecoder } from 'string_decoder'
 
 const server = http.createServer((req, res) => {
   // Get the URL and parse it
@@ -18,12 +19,24 @@ const server = http.createServer((req, res) => {
   // Get the headers as an object
   const headers = req.headers
 
-  // Send the response
-  res.end('Hello World\n')
+  // Get the payload, if any
+  const decoder = new StringDecoder('utf-8')
+  let buffer = ''
+  req.on('data', data => {
+    buffer += decoder.write(data)
+  })
 
-  // Log the request path
-  console.log(`Request received on path: ${trimmedPath} with method: ${method}, and query params:`, queryStringObject)
-  console.log('Request headers:', headers)
+  req.on('end', () => {
+    buffer += decoder.end()
+
+    // Send the response
+    res.end('Hello World\n')
+
+    // Log the request info
+    console.log(`Request received on path: ${trimmedPath} with method: ${method}, and query params:`, queryStringObject)
+    console.log('Request headers:', headers)
+    console.log('Request payload:', buffer)
+  })
 })
 
 server.listen(3000, () => console.log('The server is listening on port 3000'))
