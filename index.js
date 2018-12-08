@@ -1,6 +1,7 @@
 import http from 'http'
 import url from 'url'
 import { StringDecoder } from 'string_decoder'
+import { environment } from './config'
 
 const server = http.createServer((req, res) => {
   // Get the URL and parse it
@@ -60,7 +61,9 @@ const server = http.createServer((req, res) => {
   })
 })
 
-server.listen(3000, () => console.log('The server is listening on port 3000'))
+server.listen(environment.port, () => {
+  console.log(`The server is listening on port ${environment.port} in ${environment.name} mode.`)
+})
 
 // Define the handlers
 const handlers = {}
