@@ -31,9 +31,7 @@ const server = http.createServer((req, res) => {
     buffer += decoder.end()
 
     // Choose the handler. If one is not found, use notFound handler
-    const handler = typeof(router[trimmedPath]) !== 'undefined'
-      ? router[trimmedPath]
-      : handlers.notFound
+    const handler = router[trimmedPath] ? router[trimmedPath] : handlers.notFound
     
     // Construct the data object to send to the handler
     const data = {
