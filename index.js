@@ -1,9 +1,12 @@
 import http from 'http'
+import https from 'https'
 import url from 'url'
+import fs from 'fs'
 import { StringDecoder } from 'string_decoder'
 import { environment } from './config'
 
-const server = http.createServer((req, res) => {
+// Logic for both the http and https server
+const unifiedServer = (req, res) => {
   // Get the URL and parse it
   const parsedUrl = url.parse(req.url, true)
 
@@ -57,10 +60,29 @@ const server = http.createServer((req, res) => {
       console.log(`Response payload: ${payloadString}`)
     })
   })
+}
+
+// HTTP Server
+const httpServer = http.createServer((req, res) => {
+  unifiedServer(req, res)
 })
 
-server.listen(environment.port, () => {
-  console.log(`The server is listening on port ${environment.port} in ${environment.name} mode.`)
+httpServer.listen(environment.http, () => {
+  console.log(`The server is listening on port ${environment.http} in ${environment.name} mode.`)
+})
+
+// HTTPS Server
+const httpsServerOptions = {
+  key: fs.readFileSync('./https/key.pem'),
+  cert: fs.readFileSync('./https/cert.pem'),
+}
+
+const httpsServer = https.createServer(httpsServerOptions, (req, res) => {
+  unifiedServer(req, res)
+})
+
+httpsServer.listen(environment.https, () => {
+  console.log(`The server is listening on port ${environment.https} in ${environment.name} mode.`)
 })
 
 // Define the handlers

@@ -77,3 +77,6 @@ typings/
 
 # babel build output
 dist/
+
+# https certificates
+https/
