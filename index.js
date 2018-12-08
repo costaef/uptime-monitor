@@ -86,18 +86,12 @@ httpsServer.listen(environment.https, () => {
 })
 
 // Define the handlers
-const handlers = {}
-
-// Sample handler
-handlers.sample = (data, callback) => {
-  // Callback a http status code, and a payload object
-  callback(406, { name: 'sample handler' })
+const handlers = {
+  notFound: (data, callback) => { callback(404) },
+  ping: (data, callback) => { callback(200) },
 }
-
-// Not found handler
-handlers.notFound = (data, callback) => callback(404)
 
 // Define a request router
 const router = {
-  sample: handlers.sample
+  ping: handlers.ping,
 }
