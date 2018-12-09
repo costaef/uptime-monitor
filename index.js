@@ -4,6 +4,7 @@ import url from 'url'
 import fs from 'fs'
 import { StringDecoder } from 'string_decoder'
 import { environment } from './config'
+import { notFoundHandler, pingHandler } from './lib/handlers'
 
 // Logic for both the http and https server
 const unifiedServer = (req, res) => {
@@ -34,7 +35,7 @@ const unifiedServer = (req, res) => {
     buffer += decoder.end()
 
     // Choose the handler. If one is not found, use notFound handler
-    const handler = router[trimmedPath] ? router[trimmedPath] : handlers.notFound
+    const handler = router[trimmedPath] ? router[trimmedPath] : notFoundHandler
     
     // Construct the data object to send to the handler
     const data = {
@@ -85,13 +86,7 @@ httpsServer.listen(environment.https, () => {
   console.log(`The server is listening on port ${environment.https} in ${environment.name} mode.`)
 })
 
-// Define the handlers
-const handlers = {
-  notFound: (data, callback) => { callback(404) },
-  ping: (data, callback) => { callback(200) },
-}
-
 // Define a request router
 const router = {
-  ping: handlers.ping,
+  ping: pingHandler,
 }
