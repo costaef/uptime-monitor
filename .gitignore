@@ -80,3 +80,6 @@ dist/
 
 # https certificates
 https/
+
+# Data
+.data/
