@@ -4,7 +4,11 @@ import url from 'url'
 import fs from 'fs'
 import { StringDecoder } from 'string_decoder'
 import { environment } from './config'
-import { notFoundHandler, pingHandler } from './lib/handlers'
+import {
+  notFoundHandler,
+  pingHandler,
+  usersHandler
+} from './lib/handlers'
 
 // Logic for both the http and https server
 const unifiedServer = (req, res) => {
@@ -89,4 +93,5 @@ httpsServer.listen(environment.https, () => {
 // Define a request router
 const router = {
   ping: pingHandler,
+  users: usersHandler,
 }
